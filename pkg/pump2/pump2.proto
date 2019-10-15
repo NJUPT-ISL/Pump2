@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package pump2;
+
+
+service Pump2 {
+  rpc BuildImages (BuildInfo) returns (BuildResult) {}
+}
+
+message BuildInfo {
+  string name = 1;
+  bool gpu = 2;
+  bool tf = 3;
+  bool torch = 4;
+  string tfVersion = 5;
+  string torchVersion = 6;
+  string dependence = 7;
+  bool useToTest = 8;
+}
+
+message BuildResult {
+  bool stats = 1;
+  string imageName = 2;
+}
