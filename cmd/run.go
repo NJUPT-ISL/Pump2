@@ -31,16 +31,6 @@ var runCmd = &cobra.Command{
 	Short: "Run the Pump2 server",
 	Long: `Run the gRPC-based Pump2 server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("run called,"+serverIp+serverPort)
-		lis, err := net.Listen("tcp",serverIp+":"+serverPort)
-		if err != nil {
-			log.Fatalf("failed to listen: %v", err)
-		}
-		s := grpc.NewServer()
-		pu.RegisterPump2Server(s, &ser.P2Server{})
-		if err := s.Serve(lis); err != nil{
-			log.Fatalf("failed to serve: %v", err)
-		}
 	},
 }
 

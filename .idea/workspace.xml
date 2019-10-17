@@ -4,9 +4,10 @@
     <list default="true" id="00a32e1a-7318-4199-a53b-79c9305c5f36" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/run.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/run.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/pump2/client/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/client/client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/pump2/docker/docker.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/docker/docker.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/pump2/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/docker/docker.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/docker/docker.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/pump2/pump2.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/pump2/pump2.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/pump2/pump2.proto" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/pump2/pump2.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/server.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

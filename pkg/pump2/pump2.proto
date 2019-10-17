@@ -19,6 +19,8 @@ message BuildInfo {
 }
 
 message BuildResult {
-  bool stats = 1;
-  string imageName = 2;
+  bool buildStats = 1;
+  bool nodeStats = 2;
+  string nodeHealth = 3;
+  string imageName = 4;
 }
