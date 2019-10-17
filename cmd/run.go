@@ -18,7 +18,7 @@ package cmd
 import (
 	"fmt"
 	pu "github.com/Mr-Linus/Pump2/pkg/pump2"
-	ser "github.com/Mr-Linus/Pump2/pkg/pump2/server"
+	ser "github.com/Mr-Linus/Pump2/pkg/server"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"log"
