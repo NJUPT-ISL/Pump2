@@ -5,6 +5,7 @@ package pump2;
 
 service Pump2 {
   rpc BuildImages (BuildInfo) returns (BuildResult) {}
+  rpc NodeStatus (NodeInfo) returns (NodeStatus) {}
 }
 
 message BuildInfo {
@@ -19,8 +20,14 @@ message BuildInfo {
 }
 
 message BuildResult {
+  string imageName = 1;
+}
+
+message NodeInfo {
+
+}
+message NodeStatus {
   bool buildStats = 1;
   bool nodeStats = 2;
   string nodeHealth = 3;
-  string imageName = 4;
 }
