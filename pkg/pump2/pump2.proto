@@ -2,10 +2,9 @@ syntax = "proto3";
 
 package pump2;
 
-
 service Pump2 {
   rpc BuildImages (BuildInfo) returns (BuildResult) {}
-  rpc NodeStatus (NodeInfo) returns (NodeStatus) {}
+  rpc NodeStatus (NodeInfo) returns (NodeStat) {}
 }
 
 message BuildInfo {
@@ -20,14 +19,16 @@ message BuildInfo {
 }
 
 message BuildResult {
-  string imageName = 1;
+  bool buildStats = 1;
+  string imageName = 2;
 }
 
 message NodeInfo {
-
+  string nodeName = 1;
+  string nodeIP = 2;
 }
-message NodeStatus {
-  bool buildStats = 1;
+
+message NodeStat {
   bool nodeStats = 2;
   string nodeHealth = 3;
 }
