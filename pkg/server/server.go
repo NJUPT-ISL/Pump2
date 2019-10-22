@@ -36,11 +36,11 @@ func StartWithTLS (IP string, Port int, tlsCrtFile string, tlsKeyfile string) {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	creds, err := credentials.NewClientTLSFromFile(tlsCrtFile, tlsKeyfile)
+	cred, err := credentials.NewClientTLSFromFile(tlsCrtFile, tlsKeyfile)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer(grpc.Creds(creds))
+	s := grpc.NewServer(grpc.Creds(cred))
 	pu.RegisterPump2Server(s, &P2Server{})
 	if err := s.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)

@@ -17,12 +17,10 @@ package cmd
 
 import (
 	"fmt"
-	pu "github.com/Mr-Linus/Pump2/pkg/pump2"
-	ser "github.com/Mr-Linus/Pump2/pkg/server"
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"log"
-	"net"
+	"github.com/spf13/viper"
+	"os"
 )
 
 // runCmd represents the run command
@@ -31,13 +29,14 @@ var runCmd = &cobra.Command{
 	Short: "Run the Pump2 server",
 	Long: `Run the gRPC-based Pump2 server`,
 	Run: func(cmd *cobra.Command, args []string) {
+
 	},
 }
 
 
 func init() {
 	rootCmd.AddCommand(runCmd)
-
+	cobra.OnInitialize(initConfig)
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
@@ -47,6 +46,32 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "/etc/pump2/pump2.yaml", "Pump2 config file (default is $HOME/pump2.yaml)")
 	runCmd.PersistentFlags().StringVarP(&serverIp, "IP", "i", "0.0.0.0", "IP address used by the Pump2 server to run")
-	runCmd.PersistentFlags().StringVarP(&serverPort, "Port", "p", "5020", "Port used by the Pump2 server to run")
+	runCmd.PersistentFlags().IntVarP(&serverPort, "Port", "p", 5020, "Port used by the Pump2 server to run")
+	runCmd.PersistentFlags().BoolVarP(&enableTLS, "EnableTLS", "-t", false, "Enable the TLS authentication when running Pump2")
+}
+
+func initConfig() {
+	if cfgFile != "" {
+		// Use config file from the flag.
+		viper.SetConfigFile(cfgFile)
+	} else {
+		// Find home directory.
+		home, err := homedir.Dir()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		// Search config in home directory with name ".Pump2" (without extension).
+		viper.AddConfigPath(home)
+		viper.SetConfigName(".Pump2")
+	}
+
+	viper.AutomaticEnv() // read in environment variables that match
+
+	// If a config file is found, read it in.
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
 }
