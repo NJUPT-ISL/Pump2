@@ -11,8 +11,8 @@ type Yaml struct {
 		ServerIP string `yaml:"serverip"`
 		ServerPort string `yaml:"serverport"`
 		TLS struct {
-			tlsKey string `yaml:"tlskey"`
-			tlsCrt string `yaml:"tlscrt"`
+			TLSKey string `yaml:"tlskey"`
+			TLSCrt string `yaml:"tlscrt"`
 		}
 	}
 }

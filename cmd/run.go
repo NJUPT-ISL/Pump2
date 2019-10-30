@@ -17,6 +17,8 @@ package cmd
 
 import (
 	"fmt"
+	ser "github.com/Mr-Linus/Pump2/pkg/server"
+	ya "github.com/Mr-Linus/Pump2/pkg/yaml"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -29,7 +31,19 @@ var runCmd = &cobra.Command{
 	Short: "Run the Pump2 server",
 	Long: `Run the gRPC-based Pump2 server`,
 	Run: func(cmd *cobra.Command, args []string) {
-
+		if enableTLS {
+			conf, err := ya.ReadYaml(cfgFile)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			ser.StartWithTLS(conf.Pump2.ServerIP,
+				conf.Pump2.ServerPort,
+				conf.Pump2.TLS.TLSCrt,
+				conf.Pump2.TLS.TLSKey)
+		} else {
+			ser.StartWithoutTLS(serverIp,serverPort)
+		}
 	},
 }
 
@@ -48,8 +62,8 @@ func init() {
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "/etc/pump2/pump2.yaml", "Pump2 config file (default is $HOME/pump2.yaml)")
 	runCmd.PersistentFlags().StringVarP(&serverIp, "IP", "i", "0.0.0.0", "IP address used by the Pump2 server to run")
-	runCmd.PersistentFlags().IntVarP(&serverPort, "Port", "p", 5020, "Port used by the Pump2 server to run")
-	runCmd.PersistentFlags().BoolVarP(&enableTLS, "EnableTLS", "-t", false, "Enable the TLS authentication when running Pump2")
+	runCmd.PersistentFlags().StringVarP(&serverPort, "Port", "p", "10088", "Port used by the Pump2 server to run")
+	runCmd.PersistentFlags().BoolVarP(&enableTLS, "EnableTLS", "t", false, "Enable the TLS authentication when running Pump2")
 }
 
 func initConfig() {

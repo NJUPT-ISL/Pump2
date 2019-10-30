@@ -24,11 +24,9 @@ message BuildResult {
 }
 
 message NodeInfo {
-  string nodeName = 1;
-  string nodeIP = 2;
 }
 
 message NodeStat {
-  bool nodeStats = 2;
-  string nodeHealth = 3;
+  bool nodeStats = 1;
+  string nodeHealth = 2;
 }

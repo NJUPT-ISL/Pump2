@@ -25,15 +25,22 @@ import (
 var (
   cfgFile string
   serverIp string
-  serverPort int
+  serverPort string
   enableTLS bool
 )
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
   Use:   "Pump2",
   Short: "A build tool for Deep Learning Images",
-  Long: `Pump2 is a gRPC-based tool for building deep learning Docker images. 
-Currently supports deep custom image builds for both tensorflow and pytorch frameworks.`,
+  Long: `
+██████╗ ██╗   ██╗███╗   ███╗██████╗ ██████╗ 
+██╔══██╗██║   ██║████╗ ████║██╔══██╗╚════██╗
+██████╔╝██║   ██║██╔████╔██║██████╔╝ █████╔╝
+██╔═══╝ ██║   ██║██║╚██╔╝██║██╔═══╝ ██╔═══╝ 
+██║     ╚██████╔╝██║ ╚═╝ ██║██║     ███████╗
+╚═╝      ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚══════╝
+Pump2 is a gRPC-based tool for building ML Docker images. 
+Currently supports custom image builds for both tensorflow and pytorch frameworks.`,
   // Uncomment the following line if your bare application
   // has an action associated with it:
   //	Run: func(cmd *cobra.Command, args []string) { },
