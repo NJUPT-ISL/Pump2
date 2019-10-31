@@ -46,3 +46,4 @@ You can run the Pump2 server by executing the following command:
 ```shell script
 pump2 run -f $HOME/pump2.yaml
 ```
+
