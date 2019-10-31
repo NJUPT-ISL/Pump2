@@ -37,7 +37,7 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			fmt.Println(err)
 		}
-		out,err :=operations.ImageBuild("test:123","tensorflow")
+		out, err := operations.ImageBuild("test:123", "tensorflow")
 		if err != nil {
 			fmt.Println(err)
 		}

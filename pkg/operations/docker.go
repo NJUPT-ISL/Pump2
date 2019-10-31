@@ -12,8 +12,7 @@ import (
 	"os"
 )
 
-
-func ImageBuild(imagename string, args string) (types.ImageBuildResponse,error) {
+func ImageBuild(imagename string, args string) (types.ImageBuildResponse, error) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(err)
@@ -25,10 +24,10 @@ func ImageBuild(imagename string, args string) (types.ImageBuildResponse,error) 
 		panic(err)
 	}
 	opt := types.ImageBuildOptions{
-		Tags:[]string{imagename},
-		BuildArgs: map[string]*string{"PACKAGE":&args},
+		Tags:      []string{imagename},
+		BuildArgs: map[string]*string{"PACKAGE": &args},
 	}
-	btx, err := os.Open(os.Getenv("HOME")+"/Archive.tar")
+	btx, err := os.Open(os.Getenv("HOME") + "/Archive.tar")
 	if err != nil {
 		fmt.Println(err)
 		return types.ImageBuildResponse{}, err
@@ -53,13 +52,13 @@ func ConfigDockerfile(in *pump2.BuildInfo) (dockerfile string, err error) {
 		log.Println(err)
 		return "", err
 	}
-	if in.UseToTest{
+	if in.UseToTest {
 		dockerfile += `
 EXPOSE 22
 CMD    ["/usr/sbin/sshd", "-D"]
 `
 	}
-	f, err := os.Create(os.Getenv("HOME")+"/Dockerfile")
+	f, err := os.Create(os.Getenv("HOME") + "/Dockerfile")
 	if err != nil {
 		log.Println(err)
 		return "", err
@@ -75,11 +74,11 @@ CMD    ["/usr/sbin/sshd", "-D"]
 		log.Println(err)
 		return "", err
 	}
-	return os.Getenv("HOME"),nil
+	return os.Getenv("HOME"), nil
 }
 
-func TarDockerfile() error{
-	f,err := os.Create(os.Getenv("HOME")+"/Archive.tar")
+func TarDockerfile() error {
+	f, err := os.Create(os.Getenv("HOME") + "/Archive.tar")
 	if err != nil {
 		log.Println(err)
 		return err
@@ -87,14 +86,14 @@ func TarDockerfile() error{
 	defer f.Close()
 	tw := tar.NewWriter(f)
 	defer tw.Close()
-	fInfo, err := os.Stat(os.Getenv("HOME")+"/Dockerfile")
+	fInfo, err := os.Stat(os.Getenv("HOME") + "/Dockerfile")
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 	header, err := tar.FileInfoHeader(fInfo, "")
 	err = tw.WriteHeader(header)
-	fdocker, err := os.Open(os.Getenv("HOME")+"/Dockerfile")
+	fdocker, err := os.Open(os.Getenv("HOME") + "/Dockerfile")
 	if err != nil {
 		return err
 	}
@@ -102,28 +101,28 @@ func TarDockerfile() error{
 	if err != nil {
 		return err
 	}
-	err = os.Remove(os.Getenv("HOME")+"/Dockerfile")
+	err = os.Remove(os.Getenv("HOME") + "/Dockerfile")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func ConfigBuildArgs(in *pump2.BuildInfo) (args string){
+func ConfigBuildArgs(in *pump2.BuildInfo) (args string) {
 	args = ""
 	if in.GetTf() {
 		args += "tensorflow"
 		if in.GetGpu() {
 			args += "-gpu"
 		}
-		if in.TfVersion != ""{
-			args += "=="+in.TfVersion+" "
+		if in.TfVersion != "" {
+			args += "==" + in.TfVersion + " "
 		}
 	}
 	if in.GetTorch() {
 		args += "tensorflow"
-		if in.GetTfVersion() != ""{
-			args += "=="+in.TfVersion+" "
+		if in.GetTfVersion() != "" {
+			args += "==" + in.TfVersion + " "
 		}
 	}
 	args += in.GetDependence()

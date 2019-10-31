@@ -31,7 +31,7 @@ func GetOperation(url string) (body string, err error) {
 		return "", err
 	}
 	result, err := ioutil.ReadAll(resp.Body)
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 		return "", err
 	}

@@ -18,5 +18,5 @@ package main
 import "github.com/Mr-Linus/Pump2/cmd"
 
 func main() {
-  cmd.Execute()
+	cmd.Execute()
 }

@@ -52,7 +52,7 @@ Pump2 gen -f /etc/pump2.yaml`,
 			_ = f.Close()
 			return
 		}
-		fmt.Println("Generate a profile:"+cfgFile)
+		fmt.Println("Generate a profile:" + cfgFile)
 		err = f.Close()
 		if err != nil {
 			fmt.Println(err)
@@ -73,5 +73,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// genCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	genCmd.PersistentFlags().StringVarP(&cfgFile, "file","f", "/etc/pump2/pump2.yaml", "Path to generate the configuration file.")
+	genCmd.PersistentFlags().StringVarP(&cfgFile, "file", "f", "/etc/pump2/pump2.yaml", "Path to generate the configuration file.")
 }

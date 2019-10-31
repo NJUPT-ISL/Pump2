@@ -1,23 +1,23 @@
 package yaml
 
 import (
-"fmt"
-yaml "gopkg.in/yaml.v2"
-"io/ioutil"
+	"fmt"
+	yaml "gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
 type Yaml struct {
 	Pump2 struct {
-		ServerIP string `yaml:"serverip"`
+		ServerIP   string `yaml:"serverip"`
 		ServerPort string `yaml:"serverport"`
-		TLS struct {
+		TLS        struct {
 			TLSKey string `yaml:"tlskey"`
 			TLSCrt string `yaml:"tlscrt"`
 		}
 	}
 }
 
-func ReadYaml(File string) (conf Yaml, err error){
+func ReadYaml(File string) (conf Yaml, err error) {
 	conf = Yaml{}
 	yamlFile, err := ioutil.ReadFile(File)
 	if err != nil {

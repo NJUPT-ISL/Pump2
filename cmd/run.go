@@ -29,7 +29,7 @@ import (
 var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Run the Pump2 server",
-	Long: `Run the gRPC-based Pump2 server`,
+	Long:  `Run the gRPC-based Pump2 server`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if enableTLS {
 			conf, err := ya.ReadYaml(cfgFile)
@@ -42,11 +42,10 @@ var runCmd = &cobra.Command{
 				conf.Pump2.TLS.TLSCrt,
 				conf.Pump2.TLS.TLSKey)
 		} else {
-			ser.StartWithoutTLS(serverIp,serverPort)
+			ser.StartWithoutTLS(serverIp, serverPort)
 		}
 	},
 }
-
 
 func init() {
 	rootCmd.AddCommand(runCmd)

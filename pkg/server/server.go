@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	nodeStats bool
+	nodeStats  bool
 	nodeHealth string
 )
 
@@ -26,26 +26,26 @@ type P2Server struct {
 }
 
 func nodeStatsToString(stats bool) string {
-	if stats{
+	if stats {
 		return "true"
 	} else {
 		return "false"
 	}
 }
 
-func (s *P2Server) BuildImages(ctx context.Context, in *pump2.BuildInfo) (*pump2.BuildResult, error)  {
-	if nodeStats && nodeHealth == "ready"{
+func (s *P2Server) BuildImages(ctx context.Context, in *pump2.BuildInfo) (*pump2.BuildResult, error) {
+	if nodeStats && nodeHealth == "ready" {
 		_, err := operations.ConfigDockerfile(in)
 		if err != nil {
-			return &pump2.BuildResult{BuildStats:false,ImageName:""}, err
+			return &pump2.BuildResult{BuildStats: false, ImageName: ""}, err
 		}
 		args := operations.ConfigBuildArgs(in)
 		nodeStats = false
-		log.Println("Start Build Image: "+in.GetName())
+		log.Println("Start Build Image: " + in.GetName())
 		res, err := operations.ImageBuild(in.GetName(), args)
 		if err != nil {
 			nodeStats = true
-			return &pump2.BuildResult{BuildStats:false,ImageName:""}, err
+			return &pump2.BuildResult{BuildStats: false, ImageName: ""}, err
 		}
 		var buf = new(bytes.Buffer)
 		_, err = buf.ReadFrom(res.Body)
@@ -54,40 +54,40 @@ func (s *P2Server) BuildImages(ctx context.Context, in *pump2.BuildInfo) (*pump2
 		}
 		log.Println(buf.String())
 		nodeStats = true
-		err = os.Remove(os.Getenv("HOME")+"/Archive.tar")
+		err = os.Remove(os.Getenv("HOME") + "/Archive.tar")
 		if err != nil {
 			fmt.Println(err)
 		}
-		if strings.Contains(buf.String(),"error"){
-			return &pump2.BuildResult{BuildStats:false, ImageName:""},nil
+		if strings.Contains(buf.String(), "error") {
+			return &pump2.BuildResult{BuildStats: false, ImageName: ""}, nil
 		}
-		return &pump2.BuildResult{BuildStats:true, ImageName:in.GetName()},nil
+		return &pump2.BuildResult{BuildStats: true, ImageName: in.GetName()}, nil
 	} else {
-		return &pump2.BuildResult{BuildStats:false,ImageName:""}, e.New("Build image failed. Node Status is"+
-			nodeStatsToString(nodeStats)+" and node is "+nodeHealth)
+		return &pump2.BuildResult{BuildStats: false, ImageName: ""}, e.New("Build image failed. Node Status is" +
+			nodeStatsToString(nodeStats) + " and node is " + nodeHealth)
 	}
 }
 
-func (s *P2Server) NodeStatus(ctx context.Context, in *pump2.NodeInfo) (*pump2.NodeStat, error)  {
-	return &pump2.NodeStat{NodeHealth:nodeHealth,NodeStats:nodeStats},nil
+func (s *P2Server) NodeStatus(ctx context.Context, in *pump2.NodeInfo) (*pump2.NodeStat, error) {
+	return &pump2.NodeStat{NodeHealth: nodeHealth, NodeStats: nodeStats}, nil
 }
 
-func StartWithoutTLS (IP string, Port string) {
+func StartWithoutTLS(IP string, Port string) {
 	nodeHealth = "ready"
 	nodeStats = true
-	listen, err := net.Listen("tcp",IP+":"+Port)
-	log.Println("Pump2 Server is running at: "+IP+":"+string(Port))
+	listen, err := net.Listen("tcp", IP+":"+Port)
+	log.Println("Pump2 Server is running at: " + IP + ":" + string(Port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
 	pu.RegisterPump2Server(s, &P2Server{})
-	if err := s.Serve(listen); err != nil{
+	if err := s.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
 
-func StartWithTLS (IP string, Port string, tlsCrtFile string, tlsKeyfile string) {
+func StartWithTLS(IP string, Port string, tlsCrtFile string, tlsKeyfile string) {
 	nodeHealth = "ready"
 	nodeStats = true
 	listen, err := net.Listen("tcp", IP+":"+Port)
