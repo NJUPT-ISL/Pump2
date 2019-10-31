@@ -59,7 +59,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "/etc/pump2/pump2.yaml", "Pump2 config file (default is $HOME/pump2.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "f", os.Getenv("HOME")+"/pump2.yaml", "Pump2 config file (default is $HOME/pump2.yaml)")
 	runCmd.PersistentFlags().StringVarP(&serverIp, "IP", "i", "0.0.0.0", "IP address used by the Pump2 server to run")
 	runCmd.PersistentFlags().StringVarP(&serverPort, "Port", "p", "10088", "Port used by the Pump2 server to run")
 	runCmd.PersistentFlags().BoolVarP(&enableTLS, "EnableTLS", "t", false, "Enable the TLS authentication when running Pump2")
