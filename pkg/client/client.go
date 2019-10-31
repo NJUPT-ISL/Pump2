@@ -40,7 +40,6 @@ func RunTestWithoutTLS() {
 	log.Printf("Recv: %s", r.GetImageName())
 }
 
-
 func RunTestWithTLS(tlsKeyfile string, domainName string) {
 	cred, err := credentials.NewClientTLSFromFile(tlsKeyfile, domainName)
 	if err != nil {

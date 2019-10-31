@@ -15,10 +15,12 @@ import (
 	"os"
 	"strings"
 )
+
 var (
 	nodeStats bool
 	nodeHealth string
 )
+
 type P2Server struct {
 	pump2.UnimplementedPump2Server
 }
