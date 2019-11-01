@@ -29,4 +29,5 @@ message NodeInfo {
 message NodeStat {
   bool nodeStats = 1;
   string nodeHealth = 2;
+  int32 buildNum = 3;
 }

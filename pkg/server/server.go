@@ -19,6 +19,7 @@ import (
 var (
 	nodeStats  bool
 	nodeHealth string
+	buildNum   = 1
 )
 
 type P2Server struct {
@@ -40,11 +41,12 @@ func (s *P2Server) BuildImages(ctx context.Context, in *pump2.BuildInfo) (*pump2
 			return &pump2.BuildResult{BuildStats: false, ImageName: ""}, err
 		}
 		args := operations.ConfigBuildArgs(in)
-		nodeStats = false
 		log.Println("Start Build Image: " + in.GetName())
+		buildNum++
 		res, err := operations.ImageBuild(in.GetName(), args)
 		if err != nil {
-			nodeStats = true
+			buildNum--
+			nodeStats = false
 			return &pump2.BuildResult{BuildStats: false, ImageName: ""}, err
 		}
 		var buf = new(bytes.Buffer)
@@ -59,8 +61,10 @@ func (s *P2Server) BuildImages(ctx context.Context, in *pump2.BuildInfo) (*pump2
 			fmt.Println(err)
 		}
 		if strings.Contains(buf.String(), "error") {
+			buildNum--
 			return &pump2.BuildResult{BuildStats: false, ImageName: ""}, nil
 		}
+		buildNum--
 		return &pump2.BuildResult{BuildStats: true, ImageName: in.GetName()}, nil
 	} else {
 		return &pump2.BuildResult{BuildStats: false, ImageName: ""}, e.New("Build image failed. Node Status is" +
