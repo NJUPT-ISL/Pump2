@@ -30,4 +30,9 @@ message NodeStat {
   bool nodeStats = 1;
   string nodeHealth = 2;
   int32 buildNum = 3;
+  int32 cpu = 4;
+  float cpuUsage = 5;
+  float cpuFreq = 6;
+  int32 memory = 7;
+  int32 memoryFree = 8;
 }

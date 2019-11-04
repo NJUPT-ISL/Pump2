@@ -6,8 +6,9 @@ Currently supports custom image builds for both tensorflow and pytorch framework
 [![Go Report Card](https://goreportcard.com/badge/github.com/NJUPT-ISL/Pump2)](https://goreportcard.com/report/github.com/NJUPT-ISL/Pump2)
 
 ### Development Environment
+
 - go 1.13
-- grpc 1.24.0
+- gRPC 1.24.0
 - docker 19.05
 - cobra 0.0.5
 

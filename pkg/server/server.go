@@ -8,18 +8,21 @@ import (
 	"github.com/Mr-Linus/Pump2/pkg/operations"
 	"github.com/Mr-Linus/Pump2/pkg/pump2"
 	pu "github.com/Mr-Linus/Pump2/pkg/pump2"
+	cpu "github.com/shirou/gopsutil/cpu"
+	mem "github.com/shirou/gopsutil/mem"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"log"
 	"net"
 	"os"
+	"runtime"
 	"strings"
 )
 
 var (
 	nodeStats  bool
 	nodeHealth string
-	buildNum   = 1
+	buildNum   int32 = 1
 )
 
 type P2Server struct {
@@ -73,7 +76,40 @@ func (s *P2Server) BuildImages(ctx context.Context, in *pump2.BuildInfo) (*pump2
 }
 
 func (s *P2Server) NodeStatus(ctx context.Context, in *pump2.NodeInfo) (*pump2.NodeStat, error) {
-	return &pump2.NodeStat{NodeHealth: nodeHealth, NodeStats: nodeStats}, nil
+	var (
+		cpuUsage float64 = 0
+		mhz      float64 = 0
+	)
+	cpusPer, err := cpu.Percent(1, true)
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, i := range cpusPer {
+		cpuUsage += i
+	}
+	cpuUsage /= float64(len(cpusPer))
+	cpuInfo, err := cpu.Info()
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, i := range cpuInfo {
+		mhz += i.Mhz
+	}
+	mhz /= float64(len(cpuInfo))
+	memInfo, err := mem.VirtualMemory()
+	if err != nil {
+		fmt.Println(err)
+	}
+	return &pump2.NodeStat{
+		NodeStats:  nodeStats,
+		NodeHealth: nodeHealth,
+		BuildNum:   buildNum,
+		Cpu:        int32(runtime.NumCPU()),
+		CpuUsage:   float32(cpuUsage),
+		CpuFreq:    float32(mhz / 1024),
+		Memory:     int32(memInfo.Total / 1073741824),
+		MemoryFree: int32(memInfo.Available / 1073741824),
+	}, nil
 }
 
 func StartWithoutTLS(IP string, Port string) {
