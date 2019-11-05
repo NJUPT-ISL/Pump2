@@ -11,6 +11,7 @@ Currently supports custom image builds for both tensorflow and pytorch framework
 - gRPC 1.24.0
 - docker 19.05
 - cobra 0.0.5
+- gopsutil 2.19.10
 
 ### Feature
 - Setting ML framework and version
