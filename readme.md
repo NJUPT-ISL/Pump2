@@ -38,8 +38,8 @@ pump2:
   serverip: 0.0.0.0
   serverport: 5020
   tls:
-    tlskey: /etc/pump2/tls.key
-    tlscrt: /etc/pump2/tls.crt
+    tlskey: rpc
+    tlscrt: rpc
 ```
 Then modify the parameters you run according to your own needs.
 - Run the Pump2 server

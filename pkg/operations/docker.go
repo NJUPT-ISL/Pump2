@@ -4,7 +4,7 @@ import (
 	"archive/tar"
 	"context"
 	"fmt"
-	"github.com/Mr-Linus/Pump2/pkg/pump2"
+	"github.com/Mr-Linus/Pump2/pkg/rpc"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"io"
@@ -40,7 +40,7 @@ func ImageBuild(imagename string, args string) (types.ImageBuildResponse, error)
 	return out, nil
 }
 
-func ConfigDockerfile(in *pump2.BuildInfo) (dockerfile string, err error) {
+func ConfigDockerfile(in *rpc.BuildInfo) (dockerfile string, err error) {
 	dockerfile = "https://raw.githubusercontent.com/NJUPT-ISL/Pump/master/template/"
 	if in.Gpu {
 		dockerfile += "gpu.Dockerfile"
@@ -108,7 +108,7 @@ func TarDockerfile() error {
 	return nil
 }
 
-func ConfigBuildArgs(in *pump2.BuildInfo) (args string) {
+func ConfigBuildArgs(in *rpc.BuildInfo) (args string) {
 	args = ""
 	if in.GetTf() {
 		args += "tensorflow"

@@ -6,10 +6,10 @@ import (
 	e "errors"
 	"fmt"
 	"github.com/Mr-Linus/Pump2/pkg/operations"
-	"github.com/Mr-Linus/Pump2/pkg/pump2"
-	pu "github.com/Mr-Linus/Pump2/pkg/pump2"
-	cpu "github.com/shirou/gopsutil/cpu"
-	mem "github.com/shirou/gopsutil/mem"
+	"github.com/Mr-Linus/Pump2/pkg/rpc"
+	pu "github.com/Mr-Linus/Pump2/pkg/rpc"
+	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/mem"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"log"
@@ -26,7 +26,7 @@ var (
 )
 
 type P2Server struct {
-	pump2.UnimplementedPump2Server
+	rpc.UnimplementedPump2Server
 }
 
 func nodeStatsToString(stats bool) string {
@@ -37,11 +37,11 @@ func nodeStatsToString(stats bool) string {
 	}
 }
 
-func (s *P2Server) BuildImages(ctx context.Context, in *pump2.BuildInfo) (*pump2.BuildResult, error) {
+func (s *P2Server) BuildImages(ctx context.Context, in *rpc.BuildInfo) (*rpc.BuildResult, error) {
 	if nodeStats && nodeHealth == "ready" {
 		_, err := operations.ConfigDockerfile(in)
 		if err != nil {
-			return &pump2.BuildResult{BuildStats: false, ImageName: ""}, err
+			return &rpc.BuildResult{BuildStats: false, ImageName: ""}, err
 		}
 		args := operations.ConfigBuildArgs(in)
 		log.Println("Start Build Image: " + in.GetName())
@@ -50,7 +50,7 @@ func (s *P2Server) BuildImages(ctx context.Context, in *pump2.BuildInfo) (*pump2
 		if err != nil {
 			buildNum--
 			nodeStats = false
-			return &pump2.BuildResult{BuildStats: false, ImageName: ""}, err
+			return &rpc.BuildResult{BuildStats: false, ImageName: ""}, err
 		}
 		var buf = new(bytes.Buffer)
 		_, err = buf.ReadFrom(res.Body)
@@ -65,17 +65,17 @@ func (s *P2Server) BuildImages(ctx context.Context, in *pump2.BuildInfo) (*pump2
 		}
 		if strings.Contains(buf.String(), "error") {
 			buildNum--
-			return &pump2.BuildResult{BuildStats: false, ImageName: ""}, nil
+			return &rpc.BuildResult{BuildStats: false, ImageName: ""}, nil
 		}
 		buildNum--
-		return &pump2.BuildResult{BuildStats: true, ImageName: in.GetName()}, nil
+		return &rpc.BuildResult{BuildStats: true, ImageName: in.GetName()}, nil
 	} else {
-		return &pump2.BuildResult{BuildStats: false, ImageName: ""}, e.New("Build image failed. Node Status is" +
+		return &rpc.BuildResult{BuildStats: false, ImageName: ""}, e.New("Build image failed. Node Status is" +
 			nodeStatsToString(nodeStats) + " and node is " + nodeHealth)
 	}
 }
 
-func (s *P2Server) NodeStatus(ctx context.Context, in *pump2.NodeInfo) (*pump2.NodeStat, error) {
+func (s *P2Server) NodeStatus(ctx context.Context, in *rpc.NodeInfo) (*rpc.NodeStat, error) {
 	var (
 		cpuUsage float64 = 0
 		mhz      float64 = 0
@@ -100,7 +100,7 @@ func (s *P2Server) NodeStatus(ctx context.Context, in *pump2.NodeInfo) (*pump2.N
 	if err != nil {
 		fmt.Println(err)
 	}
-	return &pump2.NodeStat{
+	return &rpc.NodeStat{
 		NodeStats:  nodeStats,
 		NodeHealth: nodeHealth,
 		BuildNum:   buildNum,

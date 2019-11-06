@@ -2,7 +2,7 @@ package client
 
 import (
 	"context"
-	pb "github.com/Mr-Linus/Pump2/pkg/pump2"
+	pb "github.com/Mr-Linus/Pump2/pkg/rpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"log"

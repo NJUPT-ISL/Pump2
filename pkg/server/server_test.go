@@ -3,14 +3,14 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/Mr-Linus/Pump2/pkg/pump2"
+	"github.com/Mr-Linus/Pump2/pkg/rpc"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
 	"testing"
 )
 
 func TestP2Server_BuildImages(t *testing.T) {
-	p := pump2.BuildInfo{
+	p := rpc.BuildInfo{
 		Name: "testbuild:test",
 		Tf:   true, TfVersion: "1.14.0",
 		Torch:        true,
