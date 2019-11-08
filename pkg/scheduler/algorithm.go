@@ -15,6 +15,6 @@ func FilterNodes(n []Node) (nodes []Node, err error) {
 	return nodes, nil
 }
 
-func CalculateNodePerform(n Node) (score int, err error) {
-
-}
+//func CalculateNodePerform(n Node) (score int, err error) {
+//
+//}
