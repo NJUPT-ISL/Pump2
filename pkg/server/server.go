@@ -6,8 +6,7 @@ import (
 	e "errors"
 	"fmt"
 	"github.com/Mr-Linus/Pump2/pkg/operations"
-	"github.com/Mr-Linus/Pump2/pkg/rpc"
-	pu "github.com/Mr-Linus/Pump2/pkg/rpc"
+	pu "github.com/Mr-Linus/Pump2/rpc"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
 	"google.golang.org/grpc"
@@ -26,7 +25,7 @@ var (
 )
 
 type P2Server struct {
-	rpc.UnimplementedPump2Server
+	pu.UnimplementedPump2Server
 }
 
 func nodeStatsToString(stats bool) string {
@@ -37,11 +36,11 @@ func nodeStatsToString(stats bool) string {
 	}
 }
 
-func (s *P2Server) BuildImages(ctx context.Context, in *rpc.BuildInfo) (*rpc.BuildResult, error) {
+func (s *P2Server) BuildImages(ctx context.Context, in *pu.BuildInfo) (*pu.BuildResult, error) {
 	if nodeStats && nodeHealth == "ready" {
 		_, err := operations.ConfigDockerfile(in)
 		if err != nil {
-			return &rpc.BuildResult{BuildStats: false, ImageName: ""}, err
+			return &pu.BuildResult{BuildStats: false, ImageName: ""}, err
 		}
 		args := operations.ConfigBuildArgs(in)
 		log.Println("Start Build Image: " + in.GetName())
@@ -50,7 +49,7 @@ func (s *P2Server) BuildImages(ctx context.Context, in *rpc.BuildInfo) (*rpc.Bui
 		if err != nil {
 			buildNum--
 			nodeStats = false
-			return &rpc.BuildResult{BuildStats: false, ImageName: ""}, err
+			return &pu.BuildResult{BuildStats: false, ImageName: ""}, err
 		}
 		var buf = new(bytes.Buffer)
 		_, err = buf.ReadFrom(res.Body)
@@ -65,17 +64,17 @@ func (s *P2Server) BuildImages(ctx context.Context, in *rpc.BuildInfo) (*rpc.Bui
 		}
 		if strings.Contains(buf.String(), "error") {
 			buildNum--
-			return &rpc.BuildResult{BuildStats: false, ImageName: ""}, nil
+			return &pu.BuildResult{BuildStats: false, ImageName: ""}, nil
 		}
 		buildNum--
-		return &rpc.BuildResult{BuildStats: true, ImageName: in.GetName()}, nil
+		return &pu.BuildResult{BuildStats: true, ImageName: in.GetName()}, nil
 	} else {
-		return &rpc.BuildResult{BuildStats: false, ImageName: ""}, e.New("Build image failed. Node Status is" +
+		return &pu.BuildResult{BuildStats: false, ImageName: ""}, e.New("Build image failed. Node Status is" +
 			nodeStatsToString(nodeStats) + " and node is " + nodeHealth)
 	}
 }
 
-func (s *P2Server) NodeStatus(ctx context.Context, in *rpc.NodeInfo) (*rpc.NodeStat, error) {
+func (s *P2Server) NodeStatus(ctx context.Context, in *pu.NodeInfo) (*pu.NodeStat, error) {
 	var (
 		cpuUsage float64 = 0
 		mhz      float64 = 0
@@ -100,7 +99,7 @@ func (s *P2Server) NodeStatus(ctx context.Context, in *rpc.NodeInfo) (*rpc.NodeS
 	if err != nil {
 		fmt.Println(err)
 	}
-	return &rpc.NodeStat{
+	return &pu.NodeStat{
 		NodeStats:  nodeStats,
 		NodeHealth: nodeHealth,
 		BuildNum:   buildNum,

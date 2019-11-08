@@ -4,7 +4,7 @@ import (
 	"archive/tar"
 	"context"
 	"fmt"
-	"github.com/Mr-Linus/Pump2/pkg/rpc"
+	"github.com/Mr-Linus/Pump2/rpc"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"io"

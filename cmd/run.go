@@ -32,7 +32,7 @@ var runCmd = &cobra.Command{
 	Long:  `Run the gRPC-based Pump2 server`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if enableTLS {
-			conf, err := ya.ReadYaml(cfgFile)
+			conf, err := ya.ReadConfigYaml(cfgFile)
 			if err != nil {
 				fmt.Println(err)
 				return

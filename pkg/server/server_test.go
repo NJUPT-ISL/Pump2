@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/Mr-Linus/Pump2/pkg/rpc"
+	"github.com/Mr-Linus/Pump2/rpc"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
 	"testing"
