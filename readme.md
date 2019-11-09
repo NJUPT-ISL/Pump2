@@ -6,7 +6,7 @@ Currently supports custom image builds for both tensorflow and pytorch framework
 [![Go Report Card](https://goreportcard.com/badge/github.com/NJUPT-ISL/Pump2)](https://goreportcard.com/report/github.com/NJUPT-ISL/Pump2)
 
 ### Architecture
-![Arch]()
+![Arch](https://github.com/NJUPT-ISL/Pump2/blob/master/img/Pump2.jpg)
 
 ### Development Environment
 
