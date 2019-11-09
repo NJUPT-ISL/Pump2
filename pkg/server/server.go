@@ -8,6 +8,7 @@ import (
 	"github.com/Mr-Linus/Pump2/pkg/operations"
 	pu "github.com/Mr-Linus/Pump2/rpc"
 	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/load"
 	"github.com/shirou/gopsutil/mem"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -75,18 +76,11 @@ func (s *P2Server) BuildImages(ctx context.Context, in *pu.BuildInfo) (*pu.Build
 }
 
 func (s *P2Server) NodeStatus(ctx context.Context, in *pu.NodeInfo) (*pu.NodeStat, error) {
-	var (
-		cpuUsage float64 = 0
-		mhz      float64 = 0
-	)
-	cpusPer, err := cpu.Percent(1, true)
+	var mhz float64 = 0
+	lo, err := load.Avg()
 	if err != nil {
-		fmt.Println(err)
+		println(err)
 	}
-	for _, i := range cpusPer {
-		cpuUsage += i
-	}
-	cpuUsage /= float64(len(cpusPer))
 	cpuInfo, err := cpu.Info()
 	if err != nil {
 		fmt.Println(err)
@@ -104,7 +98,7 @@ func (s *P2Server) NodeStatus(ctx context.Context, in *pu.NodeInfo) (*pu.NodeSta
 		NodeHealth: nodeHealth,
 		BuildNum:   buildNum,
 		Cpu:        int32(runtime.NumCPU()),
-		CpuUsage:   float32(cpuUsage),
+		LoadAvg:    float32(lo.Load5),
 		CpuFreq:    float32(mhz / 1024),
 		Memory:     int32(memInfo.Total / 1073741824),
 		MemoryFree: int32(memInfo.Available / 1073741824),

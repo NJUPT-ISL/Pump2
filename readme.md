@@ -5,6 +5,9 @@ Currently supports custom image builds for both tensorflow and pytorch framework
 ![Golang](https://img.shields.io/badge/Language%20-go-green)
 [![Go Report Card](https://goreportcard.com/badge/github.com/NJUPT-ISL/Pump2)](https://goreportcard.com/report/github.com/NJUPT-ISL/Pump2)
 
+### Architecture
+![Arch]()
+
 ### Development Environment
 
 - go 1.13

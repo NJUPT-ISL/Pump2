@@ -4,7 +4,7 @@ import (
 	"context"
 	e "errors"
 	"github.com/Mr-Linus/Pump2/pkg/yaml"
-	"github.com/Mr-Linus/Pump2/rpc"
+	rpc "github.com/Mr-Linus/Pump2/rpc"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"log"
@@ -97,6 +97,7 @@ func InitCache(File string) error {
 			}
 		}()
 	}
+	wg.Wait()
 	return nil
 }
 
@@ -131,6 +132,7 @@ func UpdateCache() error {
 			}
 		}()
 	}
+	wg.Wait()
 	return nil
 }
 
@@ -160,4 +162,18 @@ func GetMaxCpuFreq(ns []Node) (cpuFreq float32, err error) {
 			"The number of node is " + string(len(ns)) + " and the Max CPUFreq is " + string(int(cpuFreq)))
 	}
 	return cpuFreq, nil
+}
+
+func GetMaxFreeMemory(ns []Node) (Mem int32, err error) {
+	Mem = 0
+	for _, n := range ns {
+		if n.NodeStat.MemoryFree > Mem {
+			Mem = n.NodeStat.MemoryFree
+		}
+	}
+	if Mem == 0 || len(ns) == 0 {
+		return 0, errors.New(
+			"The number of node is " + string(len(ns)) + " and the Max Free Memory is " + string(int(Mem)))
+	}
+	return Mem, nil
 }
