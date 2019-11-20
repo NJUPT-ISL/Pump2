@@ -17,8 +17,6 @@ package cmd
 
 import (
 	"fmt"
-	ser "github.com/Mr-Linus/Pump2/pkg/server"
-	ya "github.com/Mr-Linus/Pump2/pkg/yaml"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -28,23 +26,8 @@ import (
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run the Pump2 server",
-	Long:  `Run the gRPC-based Pump2 server`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if enableTLS {
-			conf, err := ya.ReadConfigYaml(cfgFile)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-			ser.StartWithTLS(conf.Pump2.ServerIP,
-				conf.Pump2.ServerPort,
-				conf.Pump2.TLS.TLSCrt,
-				conf.Pump2.TLS.TLSKey)
-		} else {
-			ser.StartWithoutTLS(serverIp, serverPort)
-		}
-	},
+	Short: "Run the Pump2 Builder or Scheduler",
+	Long:  `Run the gRPC-based Pump2 builder or Scheduler`,
 }
 
 func init() {
@@ -59,10 +42,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "f", os.Getenv("HOME")+"/pump2.yaml", "Pump2 config file (default is $HOME/pump2.yaml)")
-	runCmd.PersistentFlags().StringVarP(&serverIp, "IP", "i", "0.0.0.0", "IP address used by the Pump2 server to run")
-	runCmd.PersistentFlags().StringVarP(&serverPort, "Port", "p", "10088", "Port used by the Pump2 server to run")
-	runCmd.PersistentFlags().BoolVarP(&enableTLS, "EnableTLS", "t", false, "Enable the TLS authentication when running Pump2")
 }
 
 func initConfig() {

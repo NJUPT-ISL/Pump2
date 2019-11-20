@@ -53,7 +53,7 @@ func DoTask(address string, task pb.BuildInfo) (bool,error) {
 	}
 	defer conn.Close()
 	c := pb.NewPump2Client(conn)
-	// Contact the server and print out its response.
+	// Contact the builder and print out its response.
 	ctx := context.Background()
 	r, err := c.BuildImages(ctx,&task)
 	if err != nil {

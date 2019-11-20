@@ -1,0 +1,6 @@
+pump2:
+  serverip: 0.0.0.0
+  serverport: 5020
+  tls:
+    tlskey: /etc/pump2/tls.key
+    tlscrt: /etc/pump2/tls.crt

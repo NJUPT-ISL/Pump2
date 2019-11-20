@@ -17,10 +17,12 @@ type ConfigYaml struct {
 	}
 }
 
+type Node struct {
+	IP string `yaml:"ip"`
+}
+
 type NodeYaml struct {
-	Nodes struct {
-		IP []string `yaml:"IP"`
-	}
+	Nodes []Node `yaml:"nodes"`
 }
 
 func ReadConfigYaml(File string) (conf ConfigYaml, err error) {

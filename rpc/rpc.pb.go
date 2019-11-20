@@ -371,7 +371,7 @@ func (c *pump2Client) NodeStatus(ctx context.Context, in *NodeInfo, opts ...grpc
 	return out, nil
 }
 
-// Pump2Server is the server API for Pump2 service.
+// Pump2Server is the builder API for Pump2 service.
 type Pump2Server interface {
 	BuildImages(context.Context, *BuildInfo) (*BuildResult, error)
 	NodeStatus(context.Context, *NodeInfo) (*NodeStat, error)

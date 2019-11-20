@@ -18,7 +18,7 @@ func AddNodeInfo(IP string) error {
 	}
 	defer conn.Close()
 	c := rpc.NewPump2Client(conn)
-	// Contact the server and print out its response.
+	// Contact the builder and print out its response.
 	nodeStat, err := c.NodeStatus(context.Background(), &rpc.NodeInfo{})
 	if err != nil {
 		LogErrPrint(err)
@@ -60,7 +60,10 @@ func GetNodesIP(File string) error {
 		LogErrPrint(err)
 		return err
 	}
-	IPs = conf.Nodes.IP
+	//IPs = conf.Nodes.IP
+	for _,n := range conf.Nodes {
+		IPs = append(IPs,n.IP)
+	}
 	return nil
 }
 

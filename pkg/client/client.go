@@ -14,14 +14,14 @@ const (
 )
 
 func RunTestWithoutTLS() {
-	// Set up a connection to the server.
+	// Set up a connection to the builder.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 	c := pb.NewPump2Client(conn)
-	// Contact the server and print out its response.
+	// Contact the builder and print out its response.
 	ctx := context.Background()
 	r, err := c.BuildImages(ctx,
 		&pb.BuildInfo{
@@ -51,7 +51,7 @@ func RunTestWithTLS(tlsKeyfile string, domainName string) {
 	}
 	defer conn.Close()
 	c := pb.NewPump2Client(conn)
-	// Contact the server and print out its response.
+	// Contact the builder and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := c.BuildImages(ctx,

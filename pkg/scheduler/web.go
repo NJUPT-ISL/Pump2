@@ -77,15 +77,15 @@ func InitRouter() *gin.Engine {
 	return router
 }
 
-func RunScheduler(File string,){
+func RunScheduler(File string){
 	LogPrint("Start the Pump2 Scheduler.")
 	LogPrint("Init Scheduler Cache.")
 	if err := InitCache(File,workers);err != nil{
 		LogErrPrint(err)
 	}
 	gin.DisableConsoleColor()
-	Addr := ":60886"
+	Addr := ":5021"
 	LogPrint("Pump2 Scheduler is running at" + Addr)
 	r := InitRouter()
-	_ = r.RunTLS(Addr, "pem/server.crt", "pem/server.key") // listen and serve on 0.0.0.0:8081
+	_ = r.RunTLS(Addr, "pem/builder.crt", "pem/builder.key") // listen and serve on 0.0.0.0:8081
 }
