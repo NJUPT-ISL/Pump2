@@ -10,6 +10,7 @@ require (
 	github.com/docker/docker v0.0.0-0.20190515185722-34b56728ed71
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
+	github.com/gin-gonic/gin v1.4.0
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/golang/protobuf v1.3.2
 	github.com/gorilla/mux v1.7.3 // indirect
@@ -17,6 +18,7 @@ require (
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
+	github.com/pkg/errors v0.8.1
 	github.com/shirou/gopsutil v2.19.10+incompatible
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.4.0

@@ -3,7 +3,6 @@ package scheduler
 import (
 	e "errors"
 	"github.com/pkg/errors"
-	"log"
 )
 
 func FilterNodes(n []Node) (nodes []Node, err error) {
@@ -19,25 +18,26 @@ func FilterNodes(n []Node) (nodes []Node, err error) {
 	return nodes, nil
 }
 
-func CalculateNodePerform(n Node, cpuMax int32, freqMax float32, freeMemMax int32) (score int, err error) {
+func CalculateNodePerform(n Node, cpuMax int32, freqMax float32, freeMemMax int32,buildNumMax int32) (score int, err error) {
 	sCPU, err := CalculateCPUScore(n, cpuMax)
 	if err != nil {
-		log.Println(err)
+		LogErrPrint(err)
 		return 0, err
 	}
 	sCPUFreq, err := CalculateCPUFreqScore(n, freqMax)
 	if err != nil {
-		log.Println(err)
+		LogErrPrint(err)
 		return 0, err
 	}
 	sLoad, err := CalculateLoadAvgScore(n)
 	if err != nil {
-		log.Println(err)
+		LogErrPrint(err)
 		return 0, err
 	}
 	sMem, err := CalculateMemoryScore(n)
 	sMemFree, err := CalculateMemoryFreeScore(n,freeMemMax)
-	score = ((sCPU * 5 + sCPUFreq * 5) / 10 - sLoad) * 3 + (sMem * 3 + sMemFree * 7) * 7
+	sBuildNumMax, err := CalculateBuildNumScore(n,buildNumMax)
+	score = ((sCPU * 5 + sCPUFreq * 5) / 10 - sLoad) * 3 + (sMem * 3 + sMemFree * 7) * 5 + sBuildNumMax * 2
 	return score, nil
 }
 
@@ -66,12 +66,19 @@ func CalculateMemoryScore(n Node) (score int, err error) {
 	if n.NodeStat.Memory == 0 {
 		return 0, errors.New("The Memory of the Node is 0")
 	}
-	return int(n.NodeStat.MemoryFree / n.NodeStat.Memory), nil
+	return int(n.NodeStat.MemoryFree / n.NodeStat.Memory * 100), nil
 }
 
 func CalculateMemoryFreeScore(n Node, freeMemMax int32) (score int, err error) {
 	if n.NodeStat.MemoryFree == 0 {
 		return 0, errors.New("The Free Memory of the Node is 0")
 	}
-	return int(n.NodeStat.MemoryFree / freeMemMax), nil
+	return int(n.NodeStat.MemoryFree / freeMemMax * 100), nil
+}
+
+func  CalculateBuildNumScore(n Node, NumMax int32) (score int, err error) {
+	if n.NodeStat.BuildNum == 0{
+		return 0, errors.New("The Free Memory of the Node is 0")
+	}
+	return int(n.NodeStat.BuildNum / NumMax *100), nil
 }

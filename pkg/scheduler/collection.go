@@ -7,14 +7,13 @@ import (
 	rpc "github.com/Mr-Linus/Pump2/rpc"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
-	"log"
 	"sync"
 )
 
 func AddNodeInfo(IP string) error {
 	conn, err := grpc.Dial(IP, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		LogErrPrint(err)
 		return err
 	}
 	defer conn.Close()
@@ -22,7 +21,7 @@ func AddNodeInfo(IP string) error {
 	// Contact the server and print out its response.
 	nodeStat, err := c.NodeStatus(context.Background(), &rpc.NodeInfo{})
 	if err != nil {
-		log.Println(err)
+		LogErrPrint(err)
 		return err
 	}
 	n := Node{IP: IP, Active: true, NodeStat: *nodeStat}
@@ -41,14 +40,14 @@ func UpdateNodeInfo(IP string) error {
 	conn, err := grpc.Dial(IP, grpc.WithInsecure())
 	if err != nil {
 		Nodes[index].Active = false
-		log.Fatalf("did not connect: %v", err)
+		LogErrPrint(err)
 		return err
 	}
 	defer conn.Close()
 	c := rpc.NewPump2Client(conn)
 	nodeStat, err := c.NodeStatus(context.Background(), &rpc.NodeInfo{})
 	if err != nil {
-		log.Println(err)
+		LogErrPrint(err)
 		return err
 	}
 	Nodes[index].NodeStat = *nodeStat
@@ -58,16 +57,16 @@ func UpdateNodeInfo(IP string) error {
 func GetNodesIP(File string) error {
 	conf, err := yaml.ReadNodeYaml(File)
 	if err != nil {
-		log.Println(err)
+		LogErrPrint(err)
 		return err
 	}
 	IPs = conf.Nodes.IP
 	return nil
 }
 
-func InitCache(File string) error {
+func InitCache(File string,workers int) error {
 	if err := GetNodesIP(File); err != nil {
-		log.Println(err)
+		LogErrPrint(err)
 		return err
 	}
 	var stop <-chan struct{}
@@ -91,7 +90,7 @@ func InitCache(File string) error {
 					return
 				default:
 					if err := AddNodeInfo(ip); err != nil {
-						log.Println(err)
+						LogErrPrint(err)
 					}
 				}
 			}
@@ -101,7 +100,7 @@ func InitCache(File string) error {
 	return nil
 }
 
-func UpdateCache() error {
+func UpdateCache(workers int) error {
 	if len(IPs) == 0 {
 		return e.New("Error: the Node List is:" + string(len(IPs)))
 	}
@@ -126,7 +125,7 @@ func UpdateCache() error {
 					return
 				default:
 					if err := UpdateNodeInfo(ip); err != nil {
-						log.Println(err)
+						LogErrPrint(err)
 					}
 				}
 			}
@@ -176,4 +175,36 @@ func GetMaxFreeMemory(ns []Node) (Mem int32, err error) {
 			"The number of node is " + string(len(ns)) + " and the Max Free Memory is " + string(int(Mem)))
 	}
 	return Mem, nil
+}
+
+func GetMaxBuildNum(ns []Node) (BuildNum int32, err error) {
+	BuildNum = 0
+	for _, n := range ns {
+		if n.NodeStat.BuildNum > BuildNum {
+			BuildNum = n.NodeStat.BuildNum
+		}
+	}
+	if BuildNum == 0 || len(ns) == 0 {
+		return 0, errors.New(
+			"The number of node is " + string(len(ns)) + " and the Max Build Number is " + string(int(BuildNum)))
+	}
+	return BuildNum, nil
+}
+
+func CollectNodeInfo (activeNodes []Node) (cpuMax int32,cpuFreqMax float32,freeMemMax int32,buildNumMax int32, err error){
+	cpuMax, err = GetMaxCpu(activeNodes)
+	if err != nil {
+		LogErrPrint(err)
+
+	}
+	cpuFreqMax, err = GetMaxCpuFreq(activeNodes)
+	if err != nil {
+		LogErrPrint(err)
+	}
+	freeMemMax, err = GetMaxFreeMemory(activeNodes)
+	if err != nil {
+		LogErrPrint(err)
+	}
+	buildNumMax,err = GetMaxBuildNum(activeNodes)
+	return cpuMax, cpuFreqMax, freeMemMax, buildNumMax, err
 }

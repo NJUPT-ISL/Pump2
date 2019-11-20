@@ -2,7 +2,6 @@ package scheduler
 
 import (
 	rpc "github.com/Mr-Linus/Pump2/rpc"
-	"log"
 	"sync"
 )
 
@@ -12,41 +11,27 @@ type Node struct {
 	NodeStat rpc.NodeStat
 }
 
+type Task struct {
+	WorkNode string
+	task rpc.BuildInfo
+	state bool
+}
+
 var (
 	Nodes   []Node
+	Tasks   []Task
 	IPs     []string
 	workers = 10
 )
 
-func Schedule() (IP string, err error) {
+
+func CalculateHighestScore(activeNodes []Node, workers int) (string, int, error){
 	var (
-		maxScore int = 0
 		nScore int = 0
+		maxScore = 0
+		IP = ""
 	)
-	if UpdateCache() != nil{
-		log.Println(err)
-		return "", err
-	}
-	activeNodes, err := FilterNodes(Nodes)
-	if err != nil {
-		log.Println(err)
-		return "", err
-	}
-	cpuMax, err :=  GetMaxCpu(activeNodes)
-	if err != nil {
-		log.Println(err)
-		return "", err
-	}
-	cpuFreqMax, err := GetMaxCpuFreq(activeNodes)
-	if err != nil {
-		log.Println(err)
-		return "", err
-	}
-	freeMemMax, err := GetMaxFreeMemory(activeNodes)
-	if err != nil {
-		log.Println(err)
-		return "", err
-	}
+	cpuMax, cpuFreqMax, freeMemMax,buildNumMax, err := CollectNodeInfo(activeNodes)
 	var stop <-chan struct{}
 	pieces := len(activeNodes)
 	toProcess := make(chan Node, pieces)
@@ -67,9 +52,9 @@ func Schedule() (IP string, err error) {
 				case <-stop:
 					return
 				default:
-					nScore,err = CalculateNodePerform(n,cpuMax,cpuFreqMax,freeMemMax)
+					nScore,err = CalculateNodePerform(n,cpuMax,cpuFreqMax,freeMemMax,buildNumMax)
 					if err != nil {
-						log.Println(err)
+						LogErrPrint(err)
 						return
 					}
 					if maxScore < nScore {
@@ -81,5 +66,21 @@ func Schedule() (IP string, err error) {
 		}()
 	}
 	wg.Wait()
+	return IP, maxScore, err
+}
+
+func DefaultSchedule() (IP string, err error) {
+	if UpdateCache(workers) != nil{
+		LogErrPrint(err)
+		return "", err
+	}
+	activeNodes, err := FilterNodes(Nodes)
+	if err != nil {
+		LogErrPrint(err)
+		return "", err
+	}
+	IP, maxScore, err := CalculateHighestScore(activeNodes,workers)
+	LogPrint("The BestNode is "+IP+" ,Score: "+string(maxScore))
 	return IP,nil
 }
+
