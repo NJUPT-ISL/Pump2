@@ -1,3 +1,3 @@
 nodes:
-  - address: 127.0.0.1:5020
+  - address: localhost:5020
 #  - ip: localhost

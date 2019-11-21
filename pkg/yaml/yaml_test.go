@@ -11,5 +11,5 @@ func TestReadNodeYaml(t *testing.T) {
 	if err != nil{
 		println(err)
 	}
-	println(conf.Nodes[0].IP)
+	println(conf.Nodes[0].Address)
 }

@@ -18,7 +18,7 @@ type ConfigYaml struct {
 }
 
 type Node struct {
-	IP string `yaml:"ip"`
+	Address string `yaml:"address"`
 }
 
 type NodeYaml struct {

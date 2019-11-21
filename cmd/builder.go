@@ -48,10 +48,9 @@ server using TLS authentication.`,
 
 func init() {
 	runCmd.AddCommand(builderCmd)
-
 	// builderCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	builderCmd.PersistentFlags().StringVarP(&cfgFile, "configFile", "f", os.Getenv("HOME")+"/pump2.yaml", "Pump2 config file (default is $HOME/pump2.yaml)")
-	builderCmd.PersistentFlags().StringVarP(&serverIp, "IP", "i", "0.0.0.0", "IP address used by the Pump2 Builder to run")
+	builderCmd.PersistentFlags().StringVarP(&serverIp, "IP", "i", "127.0.0.1", "IP address used by the Pump2 Builder to run")
 	builderCmd.PersistentFlags().StringVarP(&serverPort, "Port", "p", "5020", "Port used by the Pump2 Builder to run")
 	builderCmd.PersistentFlags().BoolVarP(&enableTLS, "EnableTLS", "t", false, "Enable the TLS authentication when running Pump2")
 }

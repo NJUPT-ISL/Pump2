@@ -62,7 +62,7 @@ func GetNodesIP(File string) error {
 	}
 	//IPs = conf.Nodes.IP
 	for _,n := range conf.Nodes {
-		IPs = append(IPs,n.IP)
+		IPs = append(IPs,n.Address)
 	}
 	return nil
 }

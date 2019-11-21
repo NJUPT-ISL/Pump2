@@ -33,28 +33,44 @@ func PostAddTask(c *gin.Context) {
 		})
 		return
 	}
-	state,err := DoTask(address,task)
-	if err != nil{
-		LogErrPrint(err)
-		c.JSON(200, gin.H{
-			"state": "failed",
-			"error": err.Error(),
-		})
-		return
-	}
-	Tasks = append(Tasks,Task{WorkNode:address,task:task,state:state})
+	go func() {
+		t := Task{workNode:address,task:task,isBuild:true}
+
+		Tasks = append(Tasks,t)
+		state,err := DoTask(address,task)
+		for i,task := range Tasks{
+			if task.task.Name == t.task.Name{
+				Tasks = append(Tasks[:i],Tasks[i+1:]...)
+				t.isBuild = false
+				t.state = state
+				Tasks = append(Tasks,t)
+				break
+			}
+		}
+		if err != nil{
+			LogErrPrint(err)
+			return
+		}
+	}()
 	c.JSON(200, gin.H{
 		"state": "ok",
 	})
 }
 
 func GetListTask(c *gin.Context) {
-	c.JSON(200, Tasks)
+	var T []string
+	for _,t := range Tasks{
+		T = append(T,t.task.Name)
+	}
+	c.JSON(200,T)
+}
+
+func GetListNode(c *gin.Context) {
+	c.JSON(200,Nodes)
 }
 
 func InitRouter() *gin.Engine {
 	router := gin.New()
-	//router.Use(gin.Logger())
 	router.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		return fmt.Sprintf("[Pump2 Scheduler]%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
 			param.ClientIP,
@@ -74,6 +90,10 @@ func InitRouter() *gin.Engine {
 		buildGroup.POST("add", PostAddTask)
 		buildGroup.GET("list",GetListTask)
 	}
+	nodeGroup := router.Group("/node")
+	{
+		nodeGroup.GET("list",GetListNode)
+	}
 	return router
 }
 
@@ -87,5 +107,5 @@ func RunScheduler(File string){
 	Addr := ":5021"
 	LogPrint("Pump2 Scheduler is running at" + Addr)
 	r := InitRouter()
-	_ = r.RunTLS(Addr, "pem/builder.crt", "pem/builder.key") // listen and serve on 0.0.0.0:8081
+	_ = r.Run(Addr) // listen and serve on 0.0.0.0:8081
 }

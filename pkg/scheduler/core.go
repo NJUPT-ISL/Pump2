@@ -2,6 +2,7 @@ package scheduler
 
 import (
 	rpc "github.com/Mr-Linus/Pump2/rpc"
+	"strconv"
 	"sync"
 )
 
@@ -12,8 +13,9 @@ type Node struct {
 }
 
 type Task struct {
-	WorkNode string
+	workNode string
 	task rpc.BuildInfo
+	isBuild bool
 	state bool
 }
 
@@ -80,7 +82,7 @@ func DefaultSchedule() (IP string, err error) {
 		return "", err
 	}
 	IP, maxScore, err := CalculateHighestScore(activeNodes,workers)
-	LogPrint("The BestNode is "+IP+" ,Score: "+string(maxScore))
+	LogPrint("The BestNode is "+IP+" ,Score: "+strconv.Itoa(maxScore))
 	return IP,nil
 }
 
