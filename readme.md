@@ -49,7 +49,7 @@ Then modify the parameters you run according to your own needs.
 
 You can run the Pump2 Builder by executing the following command:
 ```shell script
-pump2 run builder -f $HOME/pump2.yaml
+pump2 run builder -f $HOME/pump2-builder.yaml
 ```
 
 - Set the Scheduler Config YAML
@@ -62,5 +62,5 @@ nodes:
   
 You can run the Pump2 Builder by executing the following command:
 ```shell script
-  pump2 run scheduler -f $HOME/pump2.yaml
+  pump2 run scheduler -f $HOME/pump2-scheduler.yaml
 ```
