@@ -27,7 +27,7 @@ Currently supports custom image builds for both tensorflow and pytorch framework
 ### Get Started
 Make sure you have docker running on your host before doing the following.
 
-- Set the Config YAML
+- Set the Builder Config YAML
 
 You could create a YAML file called `pump2.yaml` in `$HOME`.
 You can generate this file by executing the following command:
@@ -45,10 +45,22 @@ pump2:
     tlscrt: /etc/pump2/tls.crt
 ```
 Then modify the parameters you run according to your own needs.
-- Run the Pump2 server
+- Run the Pump2 Builder
 
-You can run the Pump2 server by executing the following command:
+You can run the Pump2 Builder by executing the following command:
 ```shell script
-pump2 run -f $HOME/pump2.yaml
+pump2 run builder -f $HOME/pump2.yaml
 ```
 
+- Set the Scheduler Config YAML
+Create a YAML file and the contents of the file may look like this.
+```yaml
+nodes:
+  - address: localhost:5020
+```
+- Run the Pump2 Scheduler
+  
+You can run the Pump2 Builder by executing the following command:
+```shell script
+  pump2 run scheduler -f $HOME/pump2.yaml
+```

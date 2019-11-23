@@ -26,7 +26,6 @@ var (
 	workers = 10
 )
 
-
 func CalculateHighestScore(activeNodes []Node, workers int) (string, int, error){
 	var (
 		nScore int = 0
@@ -85,4 +84,3 @@ func DefaultSchedule() (IP string, err error) {
 	LogPrint("The BestNode is "+IP+" ,Score: "+strconv.Itoa(maxScore))
 	return IP,nil
 }
-
