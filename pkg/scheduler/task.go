@@ -35,6 +35,13 @@ func CheckTask(c *gin.Context) (pb.BuildInfo, error){
 		LogErrPrint(err)
 		return pb.BuildInfo{},err
 	}
+	for _,t := range Tasks{
+		if c.PostForm("name") == t.task.Name {
+			err := errors.New("The Build Image Name exists. ")
+			LogErrPrint(err)
+			return pb.BuildInfo{},err
+		}
+	}
 	return pb.BuildInfo{
 		Name:                 c.PostForm("name"),
 		Gpu:                  ChangeToBool(c.PostForm("gpu")),
