@@ -37,7 +37,7 @@ func CalculateNodePerform(n Node, cpuMax int32, freqMax float32, freeMemMax int3
 	sMem, err := CalculateMemoryScore(n)
 	sMemFree, err := CalculateMemoryFreeScore(n,freeMemMax)
 	sBuildNumMax, err := CalculateBuildNumScore(n,buildNumMax)
-	score = ((sCPU * 5 + sCPUFreq * 5) / 10 - sLoad) * 3 + (sMem * 3 + sMemFree * 7) * 5 + sBuildNumMax * 2
+	score = ((sCPU * 5 + sCPUFreq * 5) / 10 - sLoad) * 3 + (sMem * 3 + sMemFree * 7) * 3 + sBuildNumMax * 4
 	return score, nil
 }
 
@@ -80,5 +80,5 @@ func  CalculateBuildNumScore(n Node, NumMax int32) (score int, err error) {
 	if n.NodeStat.BuildNum == 0{
 		return 0, errors.New("The Free Memory of the Node is 0")
 	}
-	return int(n.NodeStat.BuildNum / NumMax *100), nil
+	return int(NumMax - n.NodeStat.BuildNum / NumMax *100), nil
 }

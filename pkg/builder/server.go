@@ -20,7 +20,7 @@ import (
 var (
 	nodeStats  bool
 	nodeHealth string
-	buildNum   int32 = 1
+	buildNum   int32 = 0
 )
 
 type P2Server struct {
