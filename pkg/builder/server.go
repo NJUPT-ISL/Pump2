@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	e "errors"
-	"fmt"
 	"github.com/Mr-Linus/Pump2/pkg/operations"
 	pu "github.com/Mr-Linus/Pump2/rpc"
 	"github.com/shirou/gopsutil/cpu"
@@ -12,7 +11,6 @@ import (
 	"github.com/shirou/gopsutil/mem"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"log"
 	"net"
 	"os"
 	"runtime"
@@ -44,10 +42,11 @@ func (s *P2Server) BuildImages(ctx context.Context, in *pu.BuildInfo) (*pu.Build
 			return &pu.BuildResult{BuildStats: false, ImageName: ""}, err
 		}
 		args := operations.ConfigBuildArgs(in)
-		log.Println("Start Build Image: " + in.GetName())
+		LogPrint("Start Build Image: " + in.GetName())
 		buildNum++
-		res, err := operations.ImageBuild(in.GetName(), args)
+		res, err := operations.ImageBuild(in.GetName(), &args)
 		if err != nil {
+			LogErrPrint(err)
 			buildNum--
 			nodeStats = false
 			return &pu.BuildResult{BuildStats: false, ImageName: ""}, err
@@ -55,13 +54,13 @@ func (s *P2Server) BuildImages(ctx context.Context, in *pu.BuildInfo) (*pu.Build
 		var buf = new(bytes.Buffer)
 		_, err = buf.ReadFrom(res.Body)
 		if err != nil {
-			fmt.Println(err)
+			LogErrPrint(err)
 		}
-		log.Println(buf.String())
+		LogPrint(buf.String())
 		nodeStats = true
 		err = os.Remove(os.Getenv("HOME") + "/Archive.tar")
 		if err != nil {
-			fmt.Println(err)
+			LogErrPrint(err)
 		}
 		if strings.Contains(buf.String(), "error") {
 			buildNum--
@@ -79,11 +78,11 @@ func (s *P2Server) NodeStatus(ctx context.Context, in *pu.NodeInfo) (*pu.NodeSta
 	var mhz float64 = 0
 	lo, err := load.Avg()
 	if err != nil {
-		println(err)
+		LogErrPrint(err)
 	}
 	cpuInfo, err := cpu.Info()
 	if err != nil {
-		fmt.Println(err)
+		LogErrPrint(err)
 	}
 	for _, i := range cpuInfo {
 		mhz += i.Mhz
@@ -91,7 +90,7 @@ func (s *P2Server) NodeStatus(ctx context.Context, in *pu.NodeInfo) (*pu.NodeSta
 	mhz /= float64(len(cpuInfo))
 	memInfo, err := mem.VirtualMemory()
 	if err != nil {
-		fmt.Println(err)
+		LogErrPrint(err)
 	}
 	return &pu.NodeStat{
 		NodeStats:  nodeStats,
@@ -109,14 +108,14 @@ func StartWithoutTLS(IP string, Port string) {
 	nodeHealth = "ready"
 	nodeStats = true
 	listen, err := net.Listen("tcp", IP+":"+Port)
-	log.Println("Pump2 Server is running at: " + IP + ":" + string(Port))
+	LogPrint("Pump2 Server is running at: " + IP + ":" + string(Port))
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		LogErrPrint(err)
 	}
 	s := grpc.NewServer()
 	pu.RegisterPump2Server(s, &P2Server{})
 	if err := s.Serve(listen); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		LogErrPrint(err)
 	}
 }
 
@@ -125,15 +124,15 @@ func StartWithTLS(IP string, Port string, tlsCrtFile string, tlsKeyfile string) 
 	nodeStats = true
 	listen, err := net.Listen("tcp", IP+":"+Port)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		LogErrPrint(err)
 	}
 	cred, err := credentials.NewClientTLSFromFile(tlsCrtFile, tlsKeyfile)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		LogErrPrint(err)
 	}
 	s := grpc.NewServer(grpc.Creds(cred))
 	pu.RegisterPump2Server(s, &P2Server{})
 	if err := s.Serve(listen); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		LogErrPrint(err)
 	}
 }

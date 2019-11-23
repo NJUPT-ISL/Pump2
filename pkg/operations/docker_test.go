@@ -3,7 +3,8 @@ package operations
 import "testing"
 
 func TestImageBuild(t *testing.T) {
-	_, err := ImageBuild("sss", "asdasd")
+	s := "asdasd"
+	_, err := ImageBuild("sss",&s)
 	if err != nil {
 		print(err)
 	}

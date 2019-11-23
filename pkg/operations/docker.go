@@ -12,7 +12,7 @@ import (
 	"os"
 )
 
-func ImageBuild(imagename string, args string) (types.ImageBuildResponse, error) {
+func ImageBuild(imagename string, args *string) (types.ImageBuildResponse, error) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(err)
@@ -25,7 +25,7 @@ func ImageBuild(imagename string, args string) (types.ImageBuildResponse, error)
 	}
 	opt := types.ImageBuildOptions{
 		Tags:      []string{imagename},
-		BuildArgs: map[string]*string{"PACKAGE": &args},
+		BuildArgs: map[string]*string{"PACKAGES": args},
 	}
 	btx, err := os.Open(os.Getenv("HOME") + "/Archive.tar")
 	if err != nil {
