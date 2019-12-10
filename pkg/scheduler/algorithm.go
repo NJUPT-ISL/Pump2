@@ -77,8 +77,8 @@ func CalculateMemoryFreeScore(n Node, freeMemMax int32) (score int, err error) {
 }
 
 func  CalculateBuildNumScore(n Node, NumMax int32) (score int, err error) {
-	if n.NodeStat.BuildNum == 0{
+	if n.NodeStat.BuildNum == 0 {
 		return 0, errors.New("The Free Memory of the Node is 0")
 	}
-	return int(NumMax - n.NodeStat.BuildNum / NumMax *100), nil
+	return int((NumMax - n.NodeStat.BuildNum )/ NumMax *100), nil
 }

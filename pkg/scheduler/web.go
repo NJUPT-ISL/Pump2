@@ -35,7 +35,6 @@ func PostAddTask(c *gin.Context) {
 	}
 	go func() {
 		t := Task{workNode:address,task:task,isBuild:true}
-
 		Tasks = append(Tasks,t)
 		state,err := DoTask(address,task)
 		for i,task := range Tasks{
