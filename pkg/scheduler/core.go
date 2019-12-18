@@ -13,10 +13,11 @@ type Node struct {
 }
 
 type Task struct {
-	workNode string
-	task rpc.BuildInfo
-	isBuild bool
-	state bool
+	ID       string
+	WorkerNode string `json:"WorkerNode"`
+	IsBuild  bool   `json:"isBuilding"`
+	State    bool   `json:"BuildState"`
+	BuildInfo     rpc.BuildInfo
 }
 
 var (

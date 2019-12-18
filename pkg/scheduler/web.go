@@ -3,6 +3,7 @@ package scheduler
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/satori/go.uuid"
 	"time"
 )
 
@@ -33,15 +34,20 @@ func PostAddTask(c *gin.Context) {
 		})
 		return
 	}
+	t := Task{
+		ID:       uuid.NewV4().String(),
+		WorkerNode: address,
+		BuildInfo:     task,
+		IsBuild:  true,
+	}
+	Tasks = append(Tasks,t)
 	go func() {
-		t := Task{workNode:address,task:task,isBuild:true}
-		Tasks = append(Tasks,t)
 		state,err := DoTask(address,task)
 		for i,task := range Tasks{
-			if task.task.Name == t.task.Name{
+			if task.BuildInfo.Name == t.BuildInfo.Name{
 				Tasks = append(Tasks[:i],Tasks[i+1:]...)
-				t.isBuild = false
-				t.state = state
+				t.IsBuild = false
+				t.State = state
 				Tasks = append(Tasks,t)
 				break
 			}
@@ -53,15 +59,12 @@ func PostAddTask(c *gin.Context) {
 	}()
 	c.JSON(200, gin.H{
 		"state": "ok",
+		"TaskID":t.ID,
 	})
 }
 
 func GetListTask(c *gin.Context) {
-	var T []string
-	for _,t := range Tasks{
-		T = append(T,t.task.Name)
-	}
-	c.JSON(200,T)
+	c.JSON(200,Tasks)
 }
 
 func GetListNode(c *gin.Context) {

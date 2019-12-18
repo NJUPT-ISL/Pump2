@@ -36,7 +36,7 @@ func CheckTask(c *gin.Context) (pb.BuildInfo, error){
 		return pb.BuildInfo{},err
 	}
 	for _,t := range Tasks{
-		if c.PostForm("name") == t.task.Name {
+		if c.PostForm("name") == t.BuildInfo.Name {
 			err := errors.New("The Build Image Name exists. ")
 			LogErrPrint(err)
 			return pb.BuildInfo{},err
