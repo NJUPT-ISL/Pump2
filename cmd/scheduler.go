@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	sch "github.com/Mr-Linus/Pump2/pkg/scheduler"
+	"github.com/Mr-Linus/Pump2/pkg/scheduler/server"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -28,7 +28,7 @@ var schedulerCmd = &cobra.Command{
 	Long: `This command is used to start Pump2 Scheduler, which will launch a Gin Web 
 server to get the image build tasks.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		sch.RunScheduler(cfgFile)
+		server.RunScheduler(cfgFile)
 	},
 }
 

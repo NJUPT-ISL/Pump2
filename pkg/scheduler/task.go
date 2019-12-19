@@ -67,7 +67,7 @@ func DoTask(address string, task pb.BuildInfo) (bool,error) {
 	r, err := c.BuildImages(ctx,&task)
 	if err != nil {
 		LogErrPrint(err)
-		return r.BuildStats,err
+		return false,err
 	}
 	return r.BuildStats,nil
 }
