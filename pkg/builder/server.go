@@ -108,7 +108,8 @@ func StartWithoutTLS(IP string, Port string) {
 	nodeHealth = "ready"
 	nodeStats = true
 	listen, err := net.Listen("tcp", IP+":"+Port)
-	LogPrint("Pump2 Server is running at: " + IP + ":" + string(Port))
+	LogPrint("Start the Pump2 Builder.")
+	LogPrint("Pump2 Builder is running at: " + IP + ":" + Port)
 	if err != nil {
 		LogErrPrint(err)
 	}
@@ -126,6 +127,8 @@ func StartWithTLS(IP string, Port string, tlsCrtFile string, tlsKeyfile string) 
 	if err != nil {
 		LogErrPrint(err)
 	}
+	LogPrint("Start the Pump2 Builder.")
+	LogPrint("Pump2 Builder is running at: " + IP + ":" + Port)
 	cred, err := credentials.NewClientTLSFromFile(tlsCrtFile, tlsKeyfile)
 	if err != nil {
 		LogErrPrint(err)

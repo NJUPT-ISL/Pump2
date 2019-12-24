@@ -15,5 +15,5 @@ func RunScheduler(File string){
 	Addr := ":5021"
 	scheduler.LogPrint("Pump2 Scheduler is running at" + Addr)
 	r := InitRouter()
-	_ = r.Run(Addr) // listen and serve on 0.0.0.0:8081
+	_ = r.Run(Addr) // listen and serve on 0.0.0.0:5021
 }

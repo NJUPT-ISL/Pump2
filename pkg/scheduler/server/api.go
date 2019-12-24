@@ -6,6 +6,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+
+// Task Operations
 func PostAddTask(c *gin.Context) {
 	if err := scheduler.UpdateCache(scheduler.Workers);err != nil {
 		scheduler.LogErrPrint(err)
@@ -73,12 +75,47 @@ func PostTaskInfo(c *gin.Context) {
 			return
 		}
 	}
-	c.JSON(403,gin.H{
+	c.JSON(404,gin.H{
 		"state":"failed",
 		"error":"Can't find the task ID.",
 	})
 }
 
+// Node Operations
 func GetListNode(c *gin.Context) {
 	c.JSON(200, scheduler.Nodes)
+}
+
+func PostAddNode(c *gin.Context){
+	nodes := c.PostFormArray("IP")
+	for _,n := range nodes{
+		if err := scheduler.AddNodeInfo(n);err != nil {
+			c.JSON(404,gin.H{
+				"state":"failed",
+				"error":"Can't connect the node: "+n+" .",
+			})
+			return
+		}
+	}
+	c.JSON(200,gin.H{
+		"state":"ok",
+		"nodes":nodes,
+	})
+}
+
+func PostRemoveNode(c *gin.Context){
+	nodes := c.PostFormArray("IP")
+	for _,n := range nodes{
+		if err := scheduler.RemoveNode(n);err != nil{
+			c.JSON(404,gin.H{
+				"state":"failed",
+				"error":"Can't connect the node: "+n+" .",
+			})
+			return
+		}
+	}
+	c.JSON(200,gin.H{
+		"state":"ok",
+		"nodes":nodes,
+	})
 }

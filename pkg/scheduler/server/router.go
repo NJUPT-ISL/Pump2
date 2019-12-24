@@ -31,6 +31,8 @@ func InitRouter() *gin.Engine {
 	nodeGroup := router.Group("/node")
 	{
 		nodeGroup.GET("list", GetListNode)
+		nodeGroup.POST("add",PostAddNode)
+		nodeGroup.POST("remove",PostRemoveNode)
 	}
 	return router
 }

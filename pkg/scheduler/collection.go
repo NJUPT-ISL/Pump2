@@ -54,6 +54,24 @@ func UpdateNodeInfo(IP string) error {
 	return nil
 }
 
+func RemoveNode(IP string) error {
+	var (
+		index int
+		find = false)
+	for i, n := range Nodes {
+		if n.IP == IP {
+			index,find = i,true
+			break
+		}
+	}
+	if find {
+		Nodes = append(Nodes[:index],Nodes[index+1:]...)
+		return nil
+	}
+	return errors.New("Can't find the node: "+IP+" . ")
+
+}
+
 func GetNodesIP(File string) error {
 	conf, err := yaml.ReadNodeYaml(File)
 	if err != nil {
