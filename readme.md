@@ -64,3 +64,7 @@ You can run the Pump2 Builder by executing the following command:
 ```shell script
   pump2 run scheduler -f $HOME/pump2-scheduler.yaml
 ```
+## Contact us
+![QQ Group](https://github.com/NJUPT-ISL/Breakfast/blob/master/img/qrcode_1581334380545.jpg)
+
+
